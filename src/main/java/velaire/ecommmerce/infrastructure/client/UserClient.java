@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import velaire.ecommmerce.business.dtos.UserDTO;
 
-@FeignClient(name = "user", url = "${usuario.url}")
+@FeignClient(name = "user", url = "${user.url}")
 public interface UserClient {
     @GetMapping("/user")
     UserDTO findUserByEmail(@RequestParam("email") String email,
