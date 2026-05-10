@@ -33,22 +33,22 @@ public class AdminService {
 
 
         // 2. Buscar e validar as entidades relacionadas
-        Category category = categoryRepository.findById(dto.categoryId())
+        Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
 
-        Aroma aroma = aromaRepository.findById(dto.aromaId())
+        Aroma aroma = aromaRepository.findById(dto.getAromaId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aroma não encontrado"));
 
-        Format format = formatRepository.findById(dto.formatId())
+        Format format = formatRepository.findById(dto.getFormatId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Formato não encontrado"));
 
         // 3. Mapear DTO para Entity
         Product product = new Product();
-        product.setName(dto.name());
-        product.setDescription(dto.description());
-        product.setPrice(dto.price());
-        product.setStockQuantity(dto.stockQuantity());
-        product.setImageUrl(dto.imageUrl());
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setStockQuantity(dto.getStockQuantity());
+        product.setImageUrl(dto.getImageUrl());
         product.setCategory(category);
         product.setAroma(aroma);
         product.setFormat(format);
@@ -57,7 +57,22 @@ public class AdminService {
         Product savedProduct = productRepository.save(product);
 
         // 5. Retornar um DTO de resposta (boa prática para não expor a entidade pura)
-        return new ProductResponseDTO(savedProduct);
+        return convertToResponseDTO(savedProduct);
+    }
+
+
+    private ProductResponseDTO convertToResponseDTO(Product product) {
+        return ProductResponseDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .stockQuantity(product.getStockQuantity())
+                .imageUrl(product.getImageUrl())
+                .categoryName(product.getCategory().getName())
+                .aromaName(product.getAroma().getName())
+                .formatName(product.getFormat().getName())
+                .build();
     }
 
     public Aroma createAroma(String name){

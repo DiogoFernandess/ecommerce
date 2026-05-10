@@ -10,20 +10,5 @@ import velaire.ecommmerce.business.controller.ProductController;
 import velaire.ecommmerce.infrastructure.entity.Cart;
 import velaire.ecommmerce.infrastructure.entity.Product;
 
-@WebMvcTest
 public class CartTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private CartController cartController;
-
-    @Test
-    void addProductInCart() throws Exception{
-
-    }
 }

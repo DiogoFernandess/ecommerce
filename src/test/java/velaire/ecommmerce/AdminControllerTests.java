@@ -3,6 +3,7 @@ package velaire.ecommmerce;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,6 +35,9 @@ class AdminControllerTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private ProductService productService;
 
     @MockBean
     private AdminService adminService;
@@ -96,16 +100,22 @@ class AdminControllerTests {
         );
 
         // Simulando a resposta do Service
-        ProductResponseDTO response = new ProductResponseDTO(
-                1L, "Vela de Lavanda", "Calmaria pura",45.90, 50, null,
-                "Velas Clássicas", "Lavanda", "Cilíndrica"
-        );
+        ProductResponseDTO response = ProductResponseDTO.builder()
+                .id(1L)
+                .name("Vela de Lavanda")
+                .price(45.90)
+                .categoryName("Velas Clássicas")
+                .aromaName("Lavanda")
+                .formatName("Cilíndrica")
+                .build();
+
+
         Mockito.when(adminService.createProduct(any(ProductRequestDTO.class))).thenReturn(response);
 
         mockMvc.perform(post("/admin/products")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))) // Simula Admin
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
+                        .andExpect(status().isCreated());
     }
 }
