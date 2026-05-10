@@ -36,9 +36,6 @@ class AdminControllerTests {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ProductService productService;
-
-    @MockBean
     private AdminService adminService;
 
     @Test
