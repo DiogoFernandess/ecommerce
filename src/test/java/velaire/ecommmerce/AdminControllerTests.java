@@ -15,7 +15,9 @@ import velaire.ecommmerce.business.dtos.AttributeRequestDTO;
 import velaire.ecommmerce.business.dtos.ProductRequestDTO;
 import velaire.ecommmerce.business.service.AdminService;
 import velaire.ecommmerce.business.service.ProductService;
+import velaire.ecommmerce.infrastructure.entity.Aroma;
 import velaire.ecommmerce.infrastructure.entity.Category;
+import velaire.ecommmerce.infrastructure.entity.Format;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -55,5 +57,35 @@ class AdminControllerTests {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    @DisplayName("Admin deve criar Aroma com sucesso")
+    void createAromaLikeAdmin() throws Exception {
+        AttributeRequestDTO request = new AttributeRequestDTO("Lavanda");
 
+        Aroma mockAroma = new Aroma();
+        mockAroma.setName("Lavanda");
+        Mockito.when(adminService.createAroma(anyString())).thenReturn(mockAroma);
+
+        mockMvc.perform(post("/admin/aromas")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))) // Simula Admin
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("Admin deve criar Formato com sucesso")
+    void createFormatLikeAdmin() throws Exception {
+        AttributeRequestDTO request = new AttributeRequestDTO("Cilíndrica");
+
+        Format mockFormat = new Format();
+        mockFormat.setName("Cilíndrica");
+        Mockito.when(adminService.createFormat(anyString())).thenReturn(mockFormat);
+
+        mockMvc.perform(post("/admin/formats")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))) // Simula Admin
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+    }
 }
