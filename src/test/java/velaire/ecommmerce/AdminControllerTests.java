@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import velaire.ecommmerce.business.controller.AdminController;
 import velaire.ecommmerce.business.dtos.AttributeRequestDTO;
 import velaire.ecommmerce.business.dtos.ProductRequestDTO;
+import velaire.ecommmerce.business.dtos.ProductResponseDTO;
 import velaire.ecommmerce.business.service.AdminService;
 import velaire.ecommmerce.business.service.ProductService;
 import velaire.ecommmerce.infrastructure.entity.Aroma;
@@ -83,6 +84,28 @@ class AdminControllerTests {
         Mockito.when(adminService.createFormat(anyString())).thenReturn(mockFormat);
 
         mockMvc.perform(post("/admin/formats")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))) // Simula Admin
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("Admin deve criar Produto com sucesso")
+    void createProductLikeAdmin() throws Exception {
+        ProductRequestDTO request = new ProductRequestDTO(
+                "Vela de Lavanda", "Calmaria pura",
+                45.90, 50, 1L, 1L, 1L, ""
+        );
+
+        // Simulando a resposta do Service
+        ProductResponseDTO response = new ProductResponseDTO(
+                1L, "Vela de Lavanda", "Calmaria pura",45.90, 50, null,
+                "Velas Clássicas", "Lavanda", "Cilíndrica"
+        );
+        Mockito.when(adminService.createProduct(any(ProductRequestDTO.class))).thenReturn(response);
+
+        mockMvc.perform(post("/admin/products")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))) // Simula Admin
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
