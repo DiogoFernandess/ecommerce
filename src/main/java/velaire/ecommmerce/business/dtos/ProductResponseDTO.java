@@ -8,7 +8,7 @@ public record ProductResponseDTO(
         Long id,
         String name,
         String description,
-        BigDecimal price,
+        double price,
         Integer stockQuantity,
         String imageUrl,
         // Aqui retornamos apenas os nomes ou objetos simples dos atributos
