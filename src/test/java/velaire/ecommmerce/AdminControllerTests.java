@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,14 +21,19 @@ import velaire.ecommmerce.business.service.ProductService;
 import velaire.ecommmerce.infrastructure.entity.Aroma;
 import velaire.ecommmerce.infrastructure.entity.Category;
 import velaire.ecommmerce.infrastructure.entity.Format;
+import velaire.ecommmerce.infrastructure.security.JwtUtil;
+import velaire.ecommmerce.infrastructure.security.SecurityConfig;
+import velaire.ecommmerce.infrastructure.security.UserDetailsServiceImpl;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminController.class)
+@Import(SecurityConfig.class)
 class AdminControllerTests {
 
     @Autowired
@@ -35,6 +41,12 @@ class AdminControllerTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @MockBean
     private ProductService productService;
@@ -117,5 +129,30 @@ class AdminControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                         .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("Usuário comum (USER) não deve acessar rotas de Admin (Erro 403)")
+    void blockDefaultUser_InAdminEndpoints() throws Exception {
+        AttributeRequestDTO request = new AttributeRequestDTO("Tentativa Hack");
+
+        mockMvc.perform(post("/admin/categories")
+                        .with(csrf()) // Simula Usuário Comum
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                        .andExpect(status().isForbidden()); // 403 Forbidden
+    }
+
+    @Test
+    @DisplayName("Usuário não autenticado não deve acessar rotas de Admin (Erro 401)")
+    void blockNoAuthenticatedUser_InAdminEndpoints() throws Exception {
+        AttributeRequestDTO request = new AttributeRequestDTO("Anônimo");
+
+        mockMvc.perform(post("/admin/categories")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized()); // 401 Unauthorized
     }
 }
