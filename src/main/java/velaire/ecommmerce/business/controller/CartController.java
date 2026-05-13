@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import velaire.ecommmerce.business.dtos.CartRequestDTO;
+import velaire.ecommmerce.business.dtos.CartResponseDTO;
 import velaire.ecommmerce.business.service.CartService;
 
 @RestController
@@ -14,6 +15,15 @@ import velaire.ecommmerce.business.service.CartService;
 public class CartController {
 
     private final CartService cartService;
+
+    @GetMapping
+    public ResponseEntity<CartResponseDTO> getMyCart(Authentication authentication){
+
+        String userId = authentication.getName();
+
+        CartResponseDTO response = cartService.getCart(userId);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/add")
     public ResponseEntity<Void> addProduct (@RequestBody CartRequestDTO request, Authentication authentication){
