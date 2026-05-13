@@ -5,11 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import velaire.ecommmerce.business.dtos.CartItemResponseDTO;
+import velaire.ecommmerce.business.dtos.CartResponseDTO;
 import velaire.ecommmerce.infrastructure.entity.Cart;
 import velaire.ecommmerce.infrastructure.entity.CartItem;
 import velaire.ecommmerce.infrastructure.entity.Product;
 import velaire.ecommmerce.infrastructure.repository.CartRepository;
 import velaire.ecommmerce.infrastructure.repository.ProductRepository;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +81,39 @@ public class CartService {
         cart.getItems().clear();
 
         cartRepository.save(cart);
+    }
+
+    public CartResponseDTO getCart(String userId){
+
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUserId(userId);
+                    return newCart;
+                });
+
+        List<CartItemResponseDTO> itemDTOs = cart.getItems().stream()
+                .map(item -> {
+                    BigDecimal price = item.getProduct().getPrice();
+                    BigDecimal quantity = BigDecimal.valueOf(item.getQuantity());
+                    BigDecimal subTotal = price.multiply(quantity);
+
+                    return CartItemResponseDTO.builder()
+                            .productId(item.getProduct().getId())
+                            .productName(item.getProduct().getName())
+                            .imageUrl(item.getProduct().getImageUrl())
+                            .quantity(item.getQuantity())
+                            .unitPrice(price)
+                            .subTotal(subTotal)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        BigDecimal totalCart = itemDTOs.stream()
+                .map(CartItemResponseDTO::getSubTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return CartResponseDTO.builder()
+                .userId(userId).items(itemDTOs).totalCartPrice(totalCart).build();
     }
 }
