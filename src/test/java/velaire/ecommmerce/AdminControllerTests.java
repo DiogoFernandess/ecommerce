@@ -142,7 +142,7 @@ class AdminControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                         .andExpect(status().isForbidden()); // 403 Forbidden
-    }
+    }   
 
     @Test
     @DisplayName("Usuário não autenticado não deve acessar rotas de Admin (Erro 401)")

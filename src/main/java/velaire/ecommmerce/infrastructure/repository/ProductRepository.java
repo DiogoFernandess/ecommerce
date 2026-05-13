@@ -1,14 +1,18 @@
 package velaire.ecommmerce.infrastructure.repository;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import velaire.ecommmerce.infrastructure.entity.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    Optional<Product> findById(@Nonnull Long id);
     // Busca todos os produtos de uma categoria específica
     List<Product> findByCategoryId(Long categoryId);
 
