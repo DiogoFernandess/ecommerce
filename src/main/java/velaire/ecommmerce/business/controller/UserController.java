@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import velaire.ecommmerce.business.dtos.UserDTO;
+import velaire.ecommmerce.business.service.UserService;
 import velaire.ecommmerce.infrastructure.security.JwtUtil;
 import velaire.ecommmerce.infrastructure.security.SecurityConfig;
 
@@ -25,12 +27,12 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<UserDto> saveUser(@RequestBody UserDto userDto){
+    public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDto){
         return ResponseEntity.ok(userService.saveUser(userDto));
     }
 
     @PostMapping("/login")
-    public String login (@RequestBody UserDto userDto){
+    public String login (@RequestBody UserDTO userDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDto.getEmail(),
                         userDto.getPassword()
