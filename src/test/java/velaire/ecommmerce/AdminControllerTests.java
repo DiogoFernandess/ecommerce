@@ -25,6 +25,8 @@ import velaire.ecommmerce.infrastructure.security.JwtUtil;
 import velaire.ecommmerce.infrastructure.security.SecurityConfig;
 import velaire.ecommmerce.infrastructure.security.UserDetailsServiceImpl;
 
+import java.math.BigDecimal;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -107,8 +109,7 @@ class AdminControllerTests {
     @DisplayName("Admin deve criar Produto com sucesso")
     void createProductLikeAdmin() throws Exception {
         ProductRequestDTO request = new ProductRequestDTO(
-                "Vela de Lavanda", "Calmaria pura",
-                45.90, 50, 1L, 1L, 1L, ""
+                "Vela de Lavanda", "Calmaria pura", new BigDecimal(4.00), 50, 1L, 1L, 1L, ""
         );
 
         // Simulando a resposta do Service
