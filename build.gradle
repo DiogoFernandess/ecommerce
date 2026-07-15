@@ -41,9 +41,6 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-api:0.12.6")
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
-	// Integração
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-
 	// Utilitários
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
