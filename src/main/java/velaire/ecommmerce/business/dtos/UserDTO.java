@@ -10,6 +10,7 @@ import lombok.*;
 public class UserDTO {
 
     private String email;
-    private String senha;
+    private String password;
+    private RoleEnum role;
 
 }
