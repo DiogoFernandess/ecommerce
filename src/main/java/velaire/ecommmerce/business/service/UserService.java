@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import velaire.ecommmerce.infrastructure.entity.User;
 import velaire.ecommmerce.infrastructure.exceptions.ConflictException;
 import velaire.ecommmerce.infrastructure.exceptions.ResourceNotFoundException;
+import velaire.ecommmerce.infrastructure.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
