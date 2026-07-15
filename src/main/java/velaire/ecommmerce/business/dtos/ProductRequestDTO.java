@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class ProductRequestDTO{
     String name;
     String description;
-    @NotNull @Positive double price;
+    @NotNull @Positive BigDecimal price;
     @NotNull @Min(0) Integer stockQuantity;
     @NotNull Long categoryId;
     @NotNull Long aromaId;
