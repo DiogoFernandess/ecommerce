@@ -2,6 +2,7 @@ package velaire.ecommmerce.infrastructure.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,15 @@ public class JwtUtil {
     // Chave secreta usada para assinar e verificar tokens JWT
     private final String secretKey = "sua-chave-secreta-super-segura-que-deve-ser-bem-longa";
 
+    public String generateToken(String username, String role) {
+        return Jwts.builder()
+                .setSubject(username) // Define o nome de usuário
+                .claim("role", role) // <-- AQUI ESTÁ A MÁGICA! Injetamos a lista de roles
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hora
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
     // Extrai as claims do token JWT (informações adicionais do token)
     public Claims extractClaims(String token) {
