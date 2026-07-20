@@ -41,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             // Se o nome de usuário não for nulo e o usuário não estiver autenticado ainda
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // Carrega os detalhes do usuário a partir do nome de usuário
-                UserDetails userDetails = userDetailsService.loadUserData(username, authorizationHeader);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 // Valida o token JWT
                 if (jwtUtil.validateToken(token, username)) {
                     // Cria um objeto de autenticação com as informações do usuário

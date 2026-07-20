@@ -2,7 +2,6 @@ package velaire.ecommmerce.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
 @Entity
 @Table(name = "formats")

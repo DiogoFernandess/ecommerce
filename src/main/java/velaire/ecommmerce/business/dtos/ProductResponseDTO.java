@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import velaire.ecommmerce.infrastructure.entity.Product;
 
+import java.math.BigDecimal;
+
 
 @Data
 @Builder
@@ -17,7 +19,7 @@ public class ProductResponseDTO{
     Long id;
     String name;
     String description;
-    double price;
+    BigDecimal price;
     Integer stockQuantity;
     String imageUrl;
     String categoryName;
