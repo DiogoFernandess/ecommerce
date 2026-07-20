@@ -1,22 +1,31 @@
 package velaire.ecommmerce.infrastructure.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import velaire.ecommmerce.business.dtos.UserDTO;
-import velaire.ecommmerce.infrastructure.client.UserClient;
+import velaire.ecommmerce.infrastructure.entity.User;
+import velaire.ecommmerce.infrastructure.repository.UserRepository;
 
-public class UserDetailsServiceImpl {
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserClient client;
+    private UserRepository userRepository;
 
-        public UserDetails loadUserData(String email, String token){
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        // Busca o usuário no banco de dados pelo e-mail
+        User user = userRepository.findByEmail(email)
+                .orElseThrow();
 
-        UserDTO userDTO = client.findUserByEmail(email, token);
-        return User
-                .withUsername(userDTO.getEmail()) // Define o nome de usuário como o e-mail
-                .password(userDTO.getSenha()) // Define a senha do usuário
-                .build();
-        }
+        // Cria e retorna um objeto UserDetails com base no usuário encontrado
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername()) // Define o nome de usuário como o e-mail
+                .password(user.getPassword())
+                .roles(user.getRole().name())// Define a senha do usuário
+                .build(); // Constrói o objeto UserDetails
+    }
 }
