@@ -21,7 +21,7 @@ import velaire.ecommmerce.infrastructure.entity.Format;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
 
     private final ProductService productService;

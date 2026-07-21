@@ -23,8 +23,11 @@ public class AdminService {
 
     @Autowired
     private AromaRepository aromaRepository;
+    @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
     private FormatRepository formatRepository;
+    @Autowired
     private ProductRepository productRepository;
 
 
