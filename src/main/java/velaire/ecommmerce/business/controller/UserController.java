@@ -27,7 +27,7 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDto){
         return ResponseEntity.ok(userService.saveUser(userDto));
     }
