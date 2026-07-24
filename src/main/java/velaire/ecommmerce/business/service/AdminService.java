@@ -30,6 +30,7 @@ public class AdminService {
     @Autowired
     private ProductRepository productRepository;
 
+    private final ExternalIntegrationService integrationService;
 
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO dto) {
@@ -59,6 +60,9 @@ public class AdminService {
         // 4. Salvar
         Product savedProduct = productRepository.save(product);
 
+        ProductResponseDTO response = convertToResponseDTO(savedProduct);
+
+        integrationService.createProductExternalSystem(response);
         // 5. Retornar um DTO de resposta (boa prática para não expor a entidade pura)
         return convertToResponseDTO(savedProduct);
     }
